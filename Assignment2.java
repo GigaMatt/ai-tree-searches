@@ -12,14 +12,19 @@
 
 public class Assignment2 {
     public static void main(String[] args){
-        read_print_map();        //Read in/print out map file to a 2d array
+        int[][] map_space = generate_map_space();               //Read in/print out map file to a 2d array
         generate_successor_nodes();
-        search_algorithms();
+        search_algorithms(map_space);
     }
 
 
     //Read in/print out map file to a 2d array; store source/goal nodes
-    public static int[][] read_print_map(){
+
+    /**
+	 * Print Map
+	 * This method reads the test case text file & @return int[][] the 2D Map Space.
+	 */
+    public static int[][] generate_map_space(){
         //TODO: TEST THIS AS WE MIGHT NEED A TRY/CATCH STATEMENT
 
 
@@ -66,10 +71,10 @@ public class Assignment2 {
     }
 
 
-    public static void search_algorithms(){
-        breadth_first_search();
-        iterative_deepening_search();
-        a_star_search();
+    public static void search_algorithms(int[][] map_space){
+        breadth_first_search(map_space);
+        iterative_deepening_search(map_space);
+        a_star_search(map_space);
     }
 
 
@@ -77,7 +82,7 @@ public class Assignment2 {
 	 * Breadth-First Search
 	 * This method solves via a BFS tree search
 	 */
-    public static void breadth_first_search(){
+    public static void breadth_first_search(int[][] map_space){
         System.out.println("BFS Output:\n");
     }
 
@@ -86,7 +91,7 @@ public class Assignment2 {
 	 * Iterative-Deepening BFS
 	 * This method solves via a BFS tree search, complete with an IDS wrapper
 	 */
-    public static void iterative_deepening_search(){
+    public static void iterative_deepening_search(int[][] map_space){
         System.out.println("IDS Output:\n");
     }
 
@@ -95,9 +100,9 @@ public class Assignment2 {
 	 * A* Search
 	 * This method solves via A* Search
 	 */
-    public static void a_star_search(){
+    public static void a_star_search(int[][] map_space){
         int manhattan_distance = calculate_manhattan_distance();
-        System.out.println("A* Output:\n");
+        System.out.println("Manhatten Distance\t" + manhattan_distance + "\nA* Output:\n");
     }
 
 
