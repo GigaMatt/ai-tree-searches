@@ -19,24 +19,45 @@ public class Assignment2 {
 
 
     //Read in/print out map file to a 2d array; store source/goal nodes
-    public static void read_print_map(){
-        //TODO: TEST ME AS WE MIGHT NEED A TRY/CATCH STATEMENT
+    public static int[][] read_print_map(){
+        //TODO: TEST THIS AS WE MIGHT NEED A TRY/CATCH STATEMENT
 
 
         //TODO: COMPLETE DIRECTORY TO FILE
         String current_line, file_name = ("LOCATION_TO_FILE");
-
-
         FileReader file_reader = new FileReader(file_name);
         BufferedReader buffered_reader = new BufferedReader(file_reader);
+
+        //Create the 2-D Map Space
         current_line = buffered_reader.readLine();
         String[] string_split = current_line.split(" ");
-        int[][] map_space = new int[Integer.parseInt(string_split[0])][Integer.parseInt(split[1])];
+        int[][] map_space = new int[Integer.parseInt(string_split[0])][Integer.parseInt(string_split[1])];
 
+        //Retrieve Starting Position
+        current_line = buffered_reader.readLine();
+        string_split = current_line.split(" ");
+        starting_position = new int[]{Integer.parseInt(string_split[0]), Integer.parseInt(string_split[1])};
 
+        //Retrieve Goal Position
+        current_line = buffered_reader.readLine();
+        string_split = current_line.split(" ");
+        goal_position = new int[]{Integer.parseInt(string_split[0]), Integer.parseInt(string_split[1])};
 
+        //Populate 2-D Map Space with position info
+        for(int row = 0; row<(currentLine = br.readLine()) != null; row++){
+            string_split = currentLine.split(" ");
+            for(int column = 0; column < string_split.length; column++) {
+                map_space[row][column] = Integer.parseInt(string_split[column]);
+            }
+        }
+
+/*         //FOR DEBUGGING: PRINTING OUT THE STATE OF OUR MAP
+        System.out.println("The size of the map is: " + map_space.length() + " " + map_space[0].length() +
+        "\nOur starting position is: " + starting_position[0] + " " + starting_position[1] +
+        "\nOur Goal position is: " + goal_position[0] + " " + goal_position[1]); */
 
         buffered_reader.close();
+        return map_space;
     }
 
 
