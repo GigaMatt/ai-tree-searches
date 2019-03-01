@@ -11,18 +11,11 @@
  import java.util.*;        //For scanner
 
 public class Assignment2 {
-    public static void main(String[] args){
-        int[][] map_space = generate_map_space();               //Read in/print out map file to a 2d array
-        generate_successor_nodes();
-        search_algorithms(map_space);
-    }
-
-
-    //Read in/print out map file to a 2d array; store source/goal nodes
 
     /**
-	 * Print Map
-	 * This method reads the test case text file & @return int[][] the 2D Map Space.
+	 * GENERATE MAP SPACE
+	 * This method reads the test case text file
+     * @return int[][] the 2D Map Space.
 	 */
     public static int[][] generate_map_space(){
         //TODO: TEST THIS AS WE MIGHT NEED A TRY/CATCH STATEMENT
@@ -56,21 +49,22 @@ public class Assignment2 {
             }
         }
 
-/*         //FOR DEBUGGING: PRINTING OUT THE STATE OF OUR MAP
-        System.out.println("The size of the map is: " + map_space.length() + " " + map_space[0].length() +
-        "\nOur starting position is: " + starting_position[0] + " " + starting_position[1] +
-        "\nOur Goal position is: " + goal_position[0] + " " + goal_position[1]); */
-
+        //Print the 2-D Map Space
+        for(int i=0; i<map_space.length; i++){
+            for(int j=0; j<map_space[i].length; j++){
+                System.out.println(map_space[i][j]+" ");
+            }
+        }
         buffered_reader.close();
         return map_space;
     }
 
 
-    //Write a method to generate successor nodes (this should be the same for all three searches!) 
-    public static void generate_successor_nodes(){
-    }
-
-
+    /**
+	 * SEARCH ALGORITHMS
+     * @param int[][] map_space the 2D map we generated
+	 * This method calls the various search algorithms we're tasked with implementing.
+	 */
     public static void search_algorithms(int[][] map_space){
         breadth_first_search(map_space);
         iterative_deepening_search(map_space);
@@ -79,37 +73,114 @@ public class Assignment2 {
 
 
     /**
-	 * Breadth-First Search
-	 * This method solves via a BFS tree search
+	 * BREADTH-FIRST SEARCH
+     * @param int[][] map_space the 2D map we generated
+	 * This method implements BFS on our tree from our text file.
 	 */
     public static void breadth_first_search(int[][] map_space){
-        System.out.println("BFS Output:\n");
+        //Generate Goal Node
+        Node goal_node = new Node(goal_position[0]-1, goal_position[1]-1);
+        //Generate Starting Node
+		Node start_node = new Node(starting_position[0]-1, starting_position[1]-1, manhattan_distance(starting_position[0]-1, starting_position[1]-1, goal_node), map_space[starting_position[0]-1][starting_position[1]-1], null);
+        
+        int expanded_nodes = 0;
+        boolean[][] nodes_visited = new boolean[map_space.length][map_space[0].length];
+        Queue<Node> queue_nodes = new LinkedList<>();
+		queue_nodes.add(start_node);
+        Node[] child_node_array;
+
+        while(!(queue_nodes.isEmpty())){
+
+            //Search && Expand the current node
+            Node current_node = queue_nodes.poll();
+			nodes_visited[current_node.x][current_node.y] = true;            //Call .x & .y position in Node class
+			expanded_nodes++;
+            
+            //If a goal exists, display path information
+			if(goalTest(current_node)){
+                int path_cost = current_node.accumulated_path_cost;
+				display_path_information(current_node, path_cost);
+				break;
+			}
+            
+            //If no goal exists, generate the children nodes & add them to the queue
+			child_node_array = generate_successor_nodes(current_node, goal_node, nodes_visited, map_space);//get children and add the to queue
+			for(int i=0; i<child_nodes.length; i++){
+                queue_nodes.add(child_nodes[i]);
+            }
+            
+            //FIXME: IMPLEMENT THE MAX NODES IN THE MEMORY
+			//if(maxNodesInMemory < queue_nodes.size())//add the children to count for nodes in memory
+			//	maxNodesInMemory = queue_nodes.size();
+        }
     }
 
 
     /**
-	 * Iterative-Deepening BFS
-	 * This method solves via a BFS tree search, complete with an IDS wrapper
+	 * ITERATIVE DEEPENING SEARCH
+     * @param int[][] map_space the 2D map we generated
+	 * This method implements IDS on our tree from our text file.
 	 */
     public static void iterative_deepening_search(int[][] map_space){
+        //FIXME: The following call should take arguments similar to: generate_successor_nodes(Node current, Node g, boolean[][] visited, int[][] map)
+        //generate_successor_nodes();
         System.out.println("IDS Output:\n");
     }
 
-///////////////////////////////////////////////////////////////////////////
+
     /**
-	 * A* Search
-	 * This method solves via A* Search
+	 * A* SEARCH
+     * @param int[][] map_space the 2D map we generated
+	 * This method implements A* Search on our tree from our text file.
 	 */
-    public static void a_star_search(int[][] map_space){
-        int manhattan_distance = calculate_manhattan_distance();
-        System.out.println("Manhatten Distance\t" + manhattan_distance + "\nA* Output:\n");
+    public static void a_star_search(int[][] map_space){        //Called from each search function
+        int man_distance = manhattan_distance();
+        //FIXME: The following call should take arguments similar to: generate_successor_nodes(Node current, Node g, boolean[][] visited, int[][] map)
+        //generate_successor_nodes();
+
+        System.out.println("Manhatten Distance\t" +manhattan_distance+ "\nA* Output:\n");
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+	 * MANHATTAN DISTANCE
+	 * This method calculates and @return the manhattan distance.
+	 */  
+    public static int manhattan_distance(){
+        int man_distance = 0;
+        return man_distance;
     }
 
 
-    public static int calculate_manhattan_distance(){
-        return 0;
+    /**
+     * DISPLAY PATH
+     * @param node the current node being traversed
+     * @param path_cost the cost of the path thus far
+     * This method prints the path & cost from the goal node to the start node
+     */
+    public static void display_path_information(Node current_node, int path_cost) {
+		while(current_node != null){
+            System.out.print("(" +(current_node.x+1)+ "," +(current_node.y+1)+ ")\n" +
+            "Cost of path: " +path_cost+ ")\n");
+			current_node = current_node.prev;
+		}
     }
+    
 
+    /**
+     * GENERATE SUCCESSOR NODES
+     * @param node current the current node being traversed
+     * @param path_cost the cost of the path thus far
+     * This method prints the path & cost from the goal node to the start node
+     */
+    public static Node[] generate_successor_nodes(Node current_node, Node goal_node, boolean[][] nodes_visited, int[][] map_space){
+        LinkedList<Node> children_nodes_LL = new LinkedList <Node> ();
 
-
+        //Return an Object Array -- Cast to type Array
+        return children_nodes_LL.toArray();
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void main(String[] args){
+        int[][] map_space = generate_map_space();               //Read in/print out map file to a 2d array
+        search_algorithms(map_space);
+    }
 }
