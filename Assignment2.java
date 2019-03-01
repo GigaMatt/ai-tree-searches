@@ -202,34 +202,6 @@ public class Assignment2 {
     }
 
 
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
 	 * A* SEARCH
      * @param int[][] map_space the 2D map we generated
