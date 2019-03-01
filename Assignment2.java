@@ -14,7 +14,6 @@ public class Assignment2 {
 	 * @return int[][] the 2D Map Space.
 	 */
 	public static int[][] generate_map_space() {
-		//TODO: TEST THIS AS WE MIGHT NEED A TRY/CATCH STATEMENT
 		try {
 			//TODO: COMPLETE DIRECTORY TO FILE
 			String current_line, file_name = ("LOCATION_TO_FILE");
@@ -57,7 +56,6 @@ public class Assignment2 {
 		catch(IOException e) {
 			System.out.println(e.getMessage());
 			System.exit(0);
-
 		}
 		return null;
 	}
@@ -123,8 +121,8 @@ public class Assignment2 {
 				queue_nodes.add(children_nodes_array[i]);
 			}
 
-			//Add successor nodes to memory
-			if(children_expanded<queue_nodes.size())           //Fuck it; what if we just make all the variables statically available to the entire program?
+			//Add Successor Nodes to memory
+			if(children_expanded<queue_nodes.size())
 				children_expanded = queue_nodes.size();
 		}
 	}
@@ -168,7 +166,7 @@ public class Assignment2 {
 					break;
 				}
 
-				//Expand current node by poping from the stack
+				//Expand current node by popping from the stack
 				Node current_node = the_fringe.pop();
 				nodes_visited[current_node.x][current_node.y] = true;
 				children_expanded++;
@@ -266,9 +264,9 @@ public class Assignment2 {
 		}
 		System.out.println("Manhatten Distance\t" +man_distance+ "\nA* Output:\n");
 	}
-
+	
 	/** 									HELPER METHODS FOR SEARCH ALGORITHMS 												*/
-
+	
 
 	//sets the visited matrix all to false
 	/**
