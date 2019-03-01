@@ -1,11 +1,3 @@
-/*
- * CS 165a
- * Lab 1: Tree Searches
- * By: Matthew S Montoya && Hiram Rios
- * Last Modified: 1 March 2019
- * Purpose: To practicing implementing BFS, IDS, & A* Search
- * NOTE: THIS IS THE NODE CLASS FOR SEARCHES
- */
 
 public class Node {
     int x;                              //Position
@@ -25,12 +17,11 @@ public class Node {
     }
 
 
-    public Node(int x, int y, int distance, int accumulated_path_cost, Node prev, Node next){
+    public Node(int x, int y, int distance, int accumulated_path_cost, Node prev){
         this.x = x;
         this.y = y;
         this.distance = distance;
 		this.accumulated_path_cost = accumulated_path_cost;
         this.prev = prev;
-        this.next = next;
     }
 }
