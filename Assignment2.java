@@ -3,6 +3,7 @@ import java.io.*;          //For fileReader() & bufferedReader()
 import java.util.*;        //For scanner when TA executes .jar file
 
 public class Assignment2 {
+	private static final long startTime = 0;
 	public static int children_expanded = 0;        //Counter for the number of expanded successor nodes
 	public static int memory_nodes = 0;             //Counter for our nodes in memory
 	public static int[] starting_position;
@@ -16,7 +17,7 @@ public class Assignment2 {
 	public static int[][] generate_map_space() {
 		try {
 			//TODO: COMPLETE DIRECTORY TO FILE
-			String current_line, file_name = ("LOCATION_TO_FILE");
+			String current_line, file_name = ("/Users/hiramrios/Desktop/cs165a-projectwork/test_case_files/test_case_5_5.txt");
 			FileReader file_reader = new FileReader(file_name);
 			BufferedReader buffered_reader = new BufferedReader(file_reader);
 
@@ -59,9 +60,32 @@ public class Assignment2 {
 		}
 		return null;
 	}
+	
+private static void printResults(boolean timedOut, long startTime) {//prints results of search
+		
+		if(!timedOut){//path found
+			System.out.println("Number of nodes expanded " + children_expanded);
+			System.out.println("Maximum number of nodes held in memory " + memory_nodes);
+			System.out.println("Time of execution in milliseconds " + (System.currentTimeMillis() - startTime));
+		}else{//the search timed out
+			System.out.println("Null");
+			System.out.println("Cost of path: -1");
+			System.out.println("Maximum number of nodes held in memory " +memory_nodes);
+			System.out.println("Time of execution in milliseconds " + (System.currentTimeMillis() - startTime));
+		}
+}
+	
+private static void printPath(Node n) {//prints the path from the goal to the start node
+	while(n != null){
+		System.out.print("(" + (n.x + 1) + "," + (n.y + 1) + ") " );
+		n = n.prev;
+	}
+	System.out.println();
+}
 
 
-	/**
+/**
+	 *
 	 * SEARCH ALGORITHMS
 	 * @param int[][] map_space the 2D map we generated
 	 * This method calls the various search algorithms we're tasked with implementing.
@@ -72,6 +96,43 @@ public class Assignment2 {
 		a_star_search(map_space);
 	}
 
+	private static int manDis(int x, int y, Node n) {//gets the manhattan distance between the current node and the goal
+        return Math.abs(n.x - x) + Math.abs(n.y - y);
+	}
+private static Node[] generateChildren(Node current, Node g, boolean[][] visited, int[][] map) {//creates the children for the current node
+		
+		LinkedList<Node> children = new LinkedList<Node>();
+		
+		//moving right
+		if(current.y + 1 < map[0].length && map[current.x][current.y + 1] != 0 && !visited[current.x][current.y + 1]){
+			children.add(new Node(current.x, current.y + 1, manDis(current.x, current.y + 1, g), current.accumulated_path_cost+ map[current.x][current.y + 1], current));
+			visited[current.x][current.y + 1] = true;
+		}
+		//moving left
+		if(current.y - 1 >= 0 && map[current.x][current.y - 1] != 0 && !visited[current.x][current.y - 1]){
+			children.add(new Node(current.x, current.y - 1, manDis(current.x, current.y - 1, g), current.accumulated_path_cost + map[current.x][current.y - 1], current));
+			visited[current.x][current.y - 1] = true;
+		}
+		//moving up
+		if(current.x - 1 >= 0 && map[current.x - 1][current.y] != 0 && !visited[current.x - 1][current.y]){
+			children.add(new Node(current.x - 1, current.y, manDis(current.x - 1, current.y, g), current.accumulated_path_cost + map[current.x - 1][current.y], current));
+			visited[current.x - 1][current.y] = true;
+		}
+		//moving down
+		if(current.x + 1 < map.length && map[current.x + 1][current.y] != 0 && !visited[current.x + 1][current.y]){
+			children.add(new Node(current.x + 1, current.y, manDis(current.x + 1, current.y, g), current.accumulated_path_cost + map[current.x + 1][current.y], current));
+			visited[current.x + 1][current.y] = true;
+		}
+		
+		Node[] c = new Node[children.size()];
+		
+		return children.toArray(c);
+		
+	}
+	
+	private static boolean goalTest(Node current) {//goal test
+		return current.distance == 0;
+	}
 
 	/**
 	 * BREADTH-FIRST SEARCH
@@ -208,63 +269,54 @@ public class Assignment2 {
 	 * @param int[][] map_space the 2D map we generated
 	 * This method implements A* Search on our tree from our text file.
 	 */
-	public static void a_star_search(int[][] map_space) {
+	public static void a_star_search(int[][] map) {
 		//Dr. K --> USE A 3-MINUTE TIMER
 		long begin_timer = System.currentTimeMillis();
 		long end_timer = 180000;
 		boolean times_up = false;
-		int man_distance = 0;
-		//man_distance = manhattan_distance();
 
-		/**
-		 * TODO: Add A* Logic
-		 */
-
-		//Generate Goal Node
-		Node goal_node = new Node(goal_position[0]-1, goal_position[1]-1);
-		//Generate Starting Node
-		Node start_node = new Node(starting_position[0]-1, starting_position[1]-1,
-				manhattan_distance(starting_position[0]-1, starting_position[1]-1, goal_node), 
-				map_space[starting_position[0]-1][starting_position[1]-1], null);
-
-		boolean[][] nodes_visited = new boolean[map_space.length][map_space[0].length];
-		Queue<Node> queue_nodes = new LinkedList<>();
-		queue_nodes.add(start_node);
-
-		while(!(queue_nodes.isEmpty())) {
-			//Start the 3-Minute timer
-			if((System.currentTimeMillis()-begin_timer) > end_timer) {
-				System.out.println("3 minutes have passed. Your search time has expired!");
+		boolean[][] visited = new boolean[map.length][map[0].length];//to see what nodes have been visited
+		Node g = new Node(goal_position[0] - 1, goal_position[1] - 1);//creates goal node
+		Node s = new Node(starting_position[0] - 1, starting_position[1] - 1, manDis(starting_position[0] - 1, starting_position[1] - 1, g), map[starting_position[0] - 1][starting_position[1] - 1], null);//creates start node
+		Queue<Node> q = new PriorityQueue<>(map.length*map[0].length);//creates priority queue
+		q.add(s);//adds the start node
+		Node[] children;//creates an array for the children nodes
+		
+		
+		while(!q.isEmpty()){
+			
+			if((System.currentTimeMillis() - begin_timer) > end_timer){//the search has timed out
+				System.out.println("Search has timed out");
 				times_up = true;
 				break;
 			}
-
-			//Search && Expand the current node
-			Node current_node = queue_nodes.poll();                             //Removes + Returns head of queue 
-			nodes_visited[current_node.x][current_node.y] = true;               //Call .x & .y position in Node class
+			
+			Node current = q.poll();//gets first node in queue
+			visited[current.x][current.y] = true;
 			children_expanded++;
-
-			//Check if this is a goal node
-			if(is_goal_node(current_node)) {
-				int path_cost = current_node.accumulated_path_cost;
-				display_path_information(current_node, path_cost);              //Display goal path information 
+			int path_cost = current.accumulated_path_cost;
+			if(goalTest(current)){//if goal is reached print information and break
+				printPath(current);
+				System.out.println("Cost of path: " + path_cost);
 				break;
 			}
-
-			//If no goal exists, expand successor nodes & add them to the queue
-			//TODO IMPLEMENT THE GENERATION METHOD
-			Node[] children_nodes_array = generate_successor_nodes(current_node, goal_node, nodes_visited, map_space);
-			for(int i=0; i<children_nodes_array.length; i++) {
-				queue_nodes.add(children_nodes_array[i]);
-			}
-
-			//Add successor nodes to memory
-			if(memory_nodes<queue_nodes.size())
-				memory_nodes = queue_nodes.size();
+			
+			children = generateChildren(current, g, visited, map);//add children to queue
+			for(int i = 0; i < children.length; i++)
+				q.add(children[i]);
+			
+			if(memory_nodes < q.size())//add the children to count for nodes in memory
+				memory_nodes = q.size();
+			
 		}
-		System.out.println("Manhatten Distance\t" +man_distance+ "\nA* Output:\n");
+		
+		printResults(times_up, begin_timer);//prints results
+		
 	}
+<<<<<<< HEAD
 	
+=======
+>>>>>>> hiram
 	/** 									HELPER METHODS FOR SEARCH ALGORITHMS 												*/
 	
 
