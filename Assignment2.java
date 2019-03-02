@@ -306,18 +306,12 @@ private static Node[] generateChildren(Node current, Node g, boolean[][] visited
 				q.add(children[i]);
 			
 			if(memory_nodes < q.size())//add the children to count for nodes in memory
-				memory_nodes = q.size();
-			
+				memory_nodes = q.size();	
 		}
-		
 		printResults(times_up, begin_timer);//prints results
-		
 	}
-<<<<<<< HEAD
-	
-=======
->>>>>>> hiram
-	/** 									HELPER METHODS FOR SEARCH ALGORITHMS 												*/
+
+/** 									HELPER METHODS FOR SEARCH ALGORITHMS 												*/
 	
 
 	//sets the visited matrix all to false
@@ -352,9 +346,8 @@ private static Node[] generateChildren(Node current, Node g, boolean[][] visited
 	 * @param j 
 	 * @param i 
 	 */  
-	public static int manhattan_distance(int i, int j, Node goal_node) {
-		int man_distance = 0;
-		return man_distance;
+	public static int manhattan_distance(int x, int y, Node n) {
+		return(Math.abs(n.x - x) + Math.abs(n.y - y));
 	}
 
 
@@ -384,20 +377,30 @@ private static Node[] generateChildren(Node current, Node g, boolean[][] visited
 		//We can only move UP, DOWN, LEFT, & RIGHT
 		LinkedList<Node> children_nodes_LL = new LinkedList <Node> ();
 
-		//Move Up
-
-
-		//Move Down
-
-
-		//Move Left
-
-
-		//Move Right
-
-
-		//Return an Object Array --> Cast to type Array
-		return (Node[]) children_nodes_LL.toArray();		//watch out for this 
+		//moving right
+		if(current.y + 1 < map[0].length && map[current.x][current.y + 1] != 0 && !visited[current.x][current.y + 1]){
+			children.add(new Node(current.x, current.y + 1, manDis(current.x, current.y + 1, g), current.accumulated_path_cost+ map[current.x][current.y + 1], current));
+			visited[current.x][current.y + 1] = true;
+		}
+		//moving left
+		if(current.y - 1 >= 0 && map[current.x][current.y - 1] != 0 && !visited[current.x][current.y - 1]){
+			children.add(new Node(current.x, current.y - 1, manDis(current.x, current.y - 1, g), current.accumulated_path_cost + map[current.x][current.y - 1], current));
+			visited[current.x][current.y - 1] = true;
+		}
+		//moving up
+		if(current.x - 1 >= 0 && map[current.x - 1][current.y] != 0 && !visited[current.x - 1][current.y]){
+			children.add(new Node(current.x - 1, current.y, manDis(current.x - 1, current.y, g), current.accumulated_path_cost + map[current.x - 1][current.y], current));
+			visited[current.x - 1][current.y] = true;
+		}
+		//moving down
+		if(current.x + 1 < map.length && map[current.x + 1][current.y] != 0 && !visited[current.x + 1][current.y]){
+			children.add(new Node(current.x + 1, current.y, manDis(current.x + 1, current.y, g), current.accumulated_path_cost + map[current.x + 1][current.y], current));
+			visited[current.x + 1][current.y] = true;
+		}
+		
+		Node[] c = new Node[children.size()];
+		
+		return children.toArray(c);
 	}
 
 
