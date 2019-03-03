@@ -1,3 +1,13 @@
+/**
+ * CS 165a -- Artificial Intelligence
+ * Lab 01
+ * Assignment2.java
+ * By: Hiram A Rios && Matthew S Montoya
+ * Instructor: Dr. Chistopher Kiekintveld
+ * TA: Khandoker Rahad
+ * Purpose: To practice implementing BFS, DFS, and A* Search
+ * Last Modified: March 2, 2019
+ */
 
 public class Node {
     int x;                              //Position
