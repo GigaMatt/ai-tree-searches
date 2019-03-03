@@ -1,15 +1,25 @@
+/**
+ * CS 165a -- Artificial Intelligence
+ * Lab 01
+ * Assignment2.java
+ * By: Hiram A Rios && Matthew S Montoya
+ * Instructor: Dr. Chistopher Kiekintveld
+ * TA: Khandoker Rahad
+ * Purpose: To practice implementing BFS, DFS, and A* Search
+ */
 
 import java.io.*;          //For fileReader() & bufferedReader()
 import java.util.*;        //For scanner when TA executes .jar file
 
 public class Assignment2 {
+	
 	public static final long startTime = 0;
-	public static int[] goal;
-	public static int[] start;
 	public static int children_expanded = 0;        //Counter for the number of expanded successor nodes
 	public static int memory_nodes = 0;             //Counter for our nodes in memory
-	public static int[] starting_position;
+	public static int[] goal;
 	public static int[] goal_position;
+	public static int[] start;
+	public static int[] starting_position;
 
 	/**
 	 * GENERATE MAP SPACE
@@ -26,11 +36,11 @@ public class Assignment2 {
             String[] split = currentLine.split(" ");
 			int[][] map = new int[Integer.parseInt(split[0])][Integer.parseInt(split[1])];
             
-			currentLine = br.readLine();//gets the starting possition
+			currentLine = br.readLine();//gets the starting position
 			split = currentLine.split(" ");
             start = new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
             
-			currentLine = br.readLine();//gets the goal possition
+			currentLine = br.readLine();//gets the goal position
 			split = currentLine.split(" ");
             goal = new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
             
@@ -47,18 +57,19 @@ public class Assignment2 {
                 }
                 count++;
             }
-
             return map;
-
-
         }catch (IOException e){//could not read the time
             System.out.println(e.getMessage());
             System.exit(0);
         }
-
         return null;
-
     }	
+	
+	/**
+	 * PRINT SEARCH RESULTS
+	 * @param times_up
+	 * @param start_timer
+	 */
 	public static void print_search_Results(boolean times_up, long start_timer) {//prints results of search
 		if(!(times_up)) {
 			System.out.println("\tNumber of Nodes Expanded\t\t" + children_expanded);
@@ -75,7 +86,6 @@ public class Assignment2 {
 		}
 	}
 
-
 	/**
 	 * SEARCH ALGORITHMS
 	 * @param int[][] map_space the 2D map we generated
@@ -87,18 +97,17 @@ public class Assignment2 {
 		a_star_search(map_space);
 	}
 
-
 	/**
 	 * BREADTH-FIRST SEARCH
 	 * @param int[][] map_space the 2D map we generated
 	 * This method implements BFS on our tree from our text file.
 	 */
 	public static void breadth_first_search(int[][] map_space) {
-		//Dr. K --> USE A 3-MINUTE TIMER
+		//Generate Timer
 		long begin_timer = System.currentTimeMillis();
 		long end_timer = 180000;
 		boolean times_up = false;
-
+		
 		//Generate Goal Node
 		Node goal_node = new Node(goal[0]-1, goal[1]-1);
 		//Generate Starting Node
@@ -144,14 +153,13 @@ public class Assignment2 {
 		print_search_Results(times_up, begin_timer);//prints results
 	}
 
-
 	/**
 	 * ITERATIVE DEEPENING SEARCH
 	 * @param int[][] map_space the 2D map we generated
 	 * This method implements IDS on our tree from our text file.
 	 */
 	public static void iterative_deepening_search(int[][] map_space) {
-		//Dr. K --> USE A 3-MINUTE TIMER
+		//Generate Timer
 		long begin_timer = System.currentTimeMillis();
 		long end_timer = 180000;
 		boolean times_up = false;
@@ -224,7 +232,6 @@ public class Assignment2 {
 	}
 	
 	public static Comparator<Node> comp = new Comparator<Node>() {//comparator for priority queue
-		
 		@Override
 		public int compare(Node n1, Node n2) {
             return (int) (n1.accumulated_path_cost - n2.accumulated_path_cost);//using cost so far and comparator
@@ -238,7 +245,7 @@ public class Assignment2 {
 	 * This method implements A* Search on our tree from our text file.
 	 */
 	public static void a_star_search(int[][] map_space) {
-		//Dr. K --> USE A 3-MINUTE TIMER
+		//Generate Timer
 		long begin_timer = System.currentTimeMillis();
 		long end_timer = 180000;
 		boolean times_up = false;
@@ -284,7 +291,6 @@ public class Assignment2 {
 
 	/** 									HELPER METHODS FOR SEARCH ALGORITHMS 												*/
 
-
 	//sets the visited matrix all to false
 	/**
 	 * SET VISITED NODES TO FALASE
@@ -309,7 +315,6 @@ public class Assignment2 {
 			return false;
 	}
 
-
 	/**
 	 * MANHATTAN DISTANCE
 	 * This method calculates and @return the Manhattan Distance.
@@ -320,7 +325,6 @@ public class Assignment2 {
 	public static int manhattan_distance(int x, int y, Node goal_node) {
 		return(Math.abs(goal_node.x - x) + Math.abs(goal_node.y - y));
 	}
-
 
 	/**
 	 * DISPLAY PATH
@@ -335,8 +339,6 @@ public class Assignment2 {
 			current_node = current_node.prev;
 		}
 	}
-	
-
 
 	/**
 	 * GENERATE SUCCESSOR NODES
@@ -372,7 +374,6 @@ public class Assignment2 {
 		Node[] children = new Node[children_nodes_LL.size()];
 		return children_nodes_LL.toArray(children);
 	}
-
 
 	/** MAIN RUNNER */
 	public static void main(String[] args) {
