@@ -19,7 +19,7 @@ public class Assignment2 {
 	public static int[][] generate_map_space() {
 		try {
 			//TODO: COMPLETE DIRECTORY TO FILE
-			String current_line, file_name = ("/Users/hiramrios/Desktop/cs165a-projectwork/test_case_files/test_case_5_5.txt");
+			String current_line, file_name = ("/Users/hiramrios/Desktop/cs165a-projectwork/test_case_files/test_case_20_20.txt");
 			FileReader file_reader = new FileReader(file_name);
 			BufferedReader buffered_reader = new BufferedReader(file_reader);
 
@@ -167,17 +167,18 @@ public class Assignment2 {
 				manhattan_distance(start[0]-1, start[1]-1, goal_node), 
 				map_space[start[0]-1][start[1]-1], null);
 		boolean[][] nodes_visited = new boolean[map_space.length][map_space[0].length];
-		int total = 0, limit = 0, infitite_count = limit+1;      // might have to set to Integer.MAX_VALUE()
+		int total = 0, limit = 0, infitite_count = 1;      // might have to set to Integer.MAX_VALUE()
 		//REMEMBER TO USE STACK AS A FRINGE (FILO)
 		Stack<Node> the_fringe = new Stack<Node>();
 
-		while(limit<infitite_count){
+		for( limit = 0;limit<infitite_count; limit++){
 			//Reset variables from previous search
+			the_fringe.push(start_node);
 			falsify_visited_nodes(nodes_visited);
 			children_expanded = 0;
 			memory_nodes = 0;
 			//Build the stack
-			the_fringe.push(start_node);
+			
 
 			while(!(the_fringe.isEmpty())) {
 				//Start the 3-Minute timer
@@ -189,9 +190,9 @@ public class Assignment2 {
 
 				//Expand current node by popping from the stack
 				Node current_node = the_fringe.pop();
-				nodes_visited[current_node.x][current_node.y] = true;
+				//nodes_visited[current_node.x][current_node.y] = true;
 				children_expanded++;
-
+				// might be the issue 
 				//Check if this is a goal node
 				if(is_goal_node(current_node)) {
 					int path_cost = current_node.accumulated_path_cost;
@@ -210,20 +211,29 @@ public class Assignment2 {
 
 				//Generate Successor Nodes && push to the fringe (stack)
 				Node[] children_nodes_array = generate_successor_nodes(current_node, goal_node, nodes_visited, map_space);
-				for(int i=0; i<children_nodes_array.length; i++) {
+				
+				for(int i = 0; i < children_nodes_array.length; i++){//adds children to stack
 					the_fringe.push(children_nodes_array[i]);
 				}
-
-				//Add successor nodes to our memory counter
-				if(memory_nodes<the_fringe.size())//add the children to count for nodes in memory
-					memory_nodes=the_fringe.size();
+				
+				if(memory_nodes < the_fringe.size())//add the children to count for nodes in memory
+					memory_nodes = the_fringe.size();
 			}
 			total++;
-			infitite_count++;
+			//infitite_count++;
+			limit++;
 		}	
 		System.out.println("\nITERATIVE DEEPENING DFS--");
 		print_search_Results(times_up, begin_timer);//prints results
 	}
+	
+	public static Comparator<Node> comp = new Comparator<Node>() {//comparator for priority queue
+		
+		@Override
+		public int compare(Node n1, Node n2) {
+            return (int) (n1.accumulated_path_cost - n2.accumulated_path_cost);//using cost so far and comparator
+        }
+	};
 
 
 	/**
@@ -242,7 +252,7 @@ public class Assignment2 {
 		Node start_node = new Node(start[0] - 1, start[1] - 1,
 				manhattan_distance(start[0] - 1, start[1] - 1, goal_node),
 				map_space[start[0] - 1][start[1] - 1], null);//creates start node
-		Queue<Node> queue_nodes = new PriorityQueue<>(map_space.length*map_space[0].length);//creates priority queue
+		Queue<Node> queue_nodes = new PriorityQueue<Node>(map_space.length*map_space[0].length, comp );//creates priority queue
 		queue_nodes.add(start_node);//adds the start node
 		Node[] children;//creates an array for the children nodes
 
