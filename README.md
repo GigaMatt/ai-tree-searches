@@ -8,7 +8,7 @@ Built in Java, the _Tree Search + Pathfinding_ project implements some of the ba
 _Tree Search + Pathfinding_ is a midterm project by Matthew Montoya & Hiram Rios for UTEP's Artificial Intelligence, CS 4320.
 
 ## How To Compile/Run
-1. Open the directory to **/cs165a-projectwork/test_case_file files/**
+1. Open the directory to **/ai-tree-searches/test_case_file files/**
 2. Execute jar file by typing in: **java -jar AIHW2Lab.jar test_case_size_size.txt BFS**
 
 Alternatively, the _.java_ files may be imported into your IDE and run locally
