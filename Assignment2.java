@@ -4,6 +4,8 @@ import java.util.*;        //For scanner when TA executes .jar file
 
 public class Assignment2 {
 	public static final long startTime = 0;
+	public static int[] goal;
+	public static int[] start;
 	public static int children_expanded = 0;        //Counter for the number of expanded successor nodes
 	public static int memory_nodes = 0;             //Counter for our nodes in memory
 	public static int[] starting_position;
@@ -29,12 +31,12 @@ public class Assignment2 {
 			//Retrieve Starting Position
 			current_line = buffered_reader.readLine();
 			string_split = current_line.split(" ");
-			int[] starting_position = new int[]{Integer.parseInt(string_split[0]), Integer.parseInt(string_split[1])};
+			start = new int[]{Integer.parseInt(string_split[0]), Integer.parseInt(string_split[1])};
 
 			//Retrieve Goal Position
 			current_line = buffered_reader.readLine();
 			string_split = current_line.split(" ");
-			int[] goal_position = new int[]{Integer.parseInt(string_split[0]), Integer.parseInt(string_split[1])};
+			goal = new int[]{Integer.parseInt(string_split[0]), Integer.parseInt(string_split[1])};
 			int row = 0;
 
 			//Populate 2-D Map Space with position info
@@ -61,17 +63,19 @@ public class Assignment2 {
 		return null;
 	}
 
-	public static void print_search_Results(boolean timedOut, long startTime) {//prints results of search
-
-		if(!timedOut){//path found
-			System.out.println("Number of nodes expanded " + children_expanded);
-			System.out.println("Maximum number of nodes held in memory " + memory_nodes);
-			System.out.println("Time of execution in milliseconds " + (System.currentTimeMillis() - startTime));
-		}else{//the search timed out
+	public static void print_search_Results(boolean times_up, long start_timer) {//prints results of search
+		if(!(times_up)) {
+			System.out.println("\tNumber of Nodes Expanded\t\t" + children_expanded);
+			System.out.println("\tMaximum Number of Nodes held in Memory\t" + memory_nodes);
+			System.out.println("\tTime of Execution (in ms)\t\t" + (System.currentTimeMillis() - start_timer));
+		}
+		
+		//Our search timed out
+		else {
 			System.out.println("Null");
-			System.out.println("Cost of path: -1");
-			System.out.println("Maximum number of nodes held in memory " +memory_nodes);
-			System.out.println("Time of execution in milliseconds " + (System.currentTimeMillis() - startTime));
+			System.out.println("\tCost of Path:\t-1");
+			System.out.println("\tMaximum Number of Nodes Held in Memory\t" +memory_nodes);
+			System.out.println("\tTime of Execution (in ms)\t\t" + (System.currentTimeMillis() - start_timer));
 		}
 	}
 
@@ -100,11 +104,11 @@ public class Assignment2 {
 		boolean times_up = false;
 
 		//Generate Goal Node
-		Node goal_node = new Node(goal_position[0]-1, goal_position[1]-1);
+		Node goal_node = new Node(goal[0]-1, goal[1]-1);
 		//Generate Starting Node
-		Node start_node = new Node(starting_position[0]-1, starting_position[1]-1,
-				manhattan_distance(starting_position[0]-1, starting_position[1]-1, goal_node), 
-				map_space[starting_position[0]-1][starting_position[1]-1], null);
+		Node start_node = new Node(start[0]-1, start[1]-1,
+				manhattan_distance(start[0]-1, start[1]-1, goal_node), 
+				map_space[start[0]-1][start[1]-1], null);
 		boolean[][] nodes_visited = new boolean[map_space.length][map_space[0].length];
 		Queue<Node> queue_nodes = new LinkedList<>();
 		queue_nodes.add(start_node);
@@ -140,6 +144,7 @@ public class Assignment2 {
 			if(children_expanded<queue_nodes.size())
 				children_expanded = queue_nodes.size();
 		}
+		System.out.println("\nBREADTH-FIRST SEARCH--");
 		print_search_Results(times_up, begin_timer);//prints results
 	}
 
@@ -156,11 +161,11 @@ public class Assignment2 {
 		boolean times_up = false;
 
 		//Generate Goal Node
-		Node goal_node = new Node(goal_position[0]-1, goal_position[1]-1);
+		Node goal_node = new Node(goal[0]-1, goal[1]-1);
 		//Generate Starting Node
-		Node start_node = new Node(starting_position[0]-1, starting_position[1]-1,
-				manhattan_distance(starting_position[0]-1, starting_position[1]-1, goal_node), 
-				map_space[starting_position[0]-1][starting_position[1]-1], null);
+		Node start_node = new Node(start[0]-1, start[1]-1,
+				manhattan_distance(start[0]-1, start[1]-1, goal_node), 
+				map_space[start[0]-1][start[1]-1], null);
 		boolean[][] nodes_visited = new boolean[map_space.length][map_space[0].length];
 		int total = 0, limit = 0, infitite_count = limit+1;      // might have to set to Integer.MAX_VALUE()
 		//REMEMBER TO USE STACK AS A FRINGE (FILO)
@@ -177,7 +182,7 @@ public class Assignment2 {
 			while(!(the_fringe.isEmpty())) {
 				//Start the 3-Minute timer
 				if((System.currentTimeMillis()-begin_timer) > end_timer) {
-					System.out.println("3 minutes have passed. Your search time has expired!");
+					System.out.println("3 minutes have passed! Your search time has expired!");
 					times_up = true;
 					break;
 				}
@@ -215,7 +220,8 @@ public class Assignment2 {
 			}
 			total++;
 			infitite_count++;
-		}		
+		}	
+		System.out.println("\nITERATIVE DEEPENING DFS--");
 		print_search_Results(times_up, begin_timer);//prints results
 	}
 
@@ -232,10 +238,10 @@ public class Assignment2 {
 		boolean times_up = false;
 
 		boolean[][] nodes_visited = new boolean[map_space.length][map_space[0].length];//to see what nodes have been visited
-		Node goal_node = new Node(goal_position[0] - 1, goal_position[1] - 1);//creates goal node
-		Node start_node = new Node(starting_position[0] - 1, starting_position[1] - 1,
-				manhattan_distance(starting_position[0] - 1, starting_position[1] - 1, goal_node),
-				map_space[starting_position[0] - 1][starting_position[1] - 1], null);//creates start node
+		Node goal_node = new Node(goal[0] - 1, goal[1] - 1);//creates goal node
+		Node start_node = new Node(start[0] - 1, start[1] - 1,
+				manhattan_distance(start[0] - 1, start[1] - 1, goal_node),
+				map_space[start[0] - 1][start[1] - 1], null);//creates start node
 		Queue<Node> queue_nodes = new PriorityQueue<>(map_space.length*map_space[0].length);//creates priority queue
 		queue_nodes.add(start_node);//adds the start node
 		Node[] children;//creates an array for the children nodes
@@ -266,6 +272,7 @@ public class Assignment2 {
 			if(memory_nodes < queue_nodes.size())//add the children to count for nodes in memory
 				memory_nodes = queue_nodes.size();	
 		}
+		System.out.println("\nA* SEARCH--");
 		print_search_Results(times_up, begin_timer);//prints results
 	}
 
@@ -356,10 +363,8 @@ public class Assignment2 {
 			children_nodes_LL.add(new Node(current_node.x + 1, current_node.y, manhattan_distance(current_node.x + 1, current_node.y, goal_node), current_node.accumulated_path_cost + map_space[current_node.x + 1][current_node.y], current_node));
 			nodes_visited[current_node.x + 1][current_node.y] = true;
 		}
-
-		Node[] c = new Node[children_nodes_LL.size()];
-
-		return children_nodes_LL.toArray(c);
+		Node[] children = new Node[children_nodes_LL.size()];
+		return children_nodes_LL.toArray(children);
 	}
 
 
