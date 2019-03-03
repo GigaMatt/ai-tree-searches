@@ -1,6 +1,6 @@
 # Artificial Intelligence Tree Search + Pathfinding
 ## Java Project for Implementing Basic A.I. Tree Searches (BFS, DFS, & A* Search)
-![alt text](https://raw.githubusercontent.com/gigamatt/connect-four-web-service/master/img/readme_image.png)
+![alt text](https://raw.githubusercontent.com/gigamatt/ai-tree-searches/master/img/readme_image.png)
 
 ## About
 Built in Java, the _Tree Search + Pathfinding_ project implements some of the basic search methods used for problem solving in artificial intelligence, and to see the benefits of heuristic search. In this project, we experiment with a basic formulation of the general pathfinding problem. 
