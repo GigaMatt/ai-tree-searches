@@ -25,9 +25,9 @@ public class Assignment2 {
 	 * This method reads the test case text file
 	 * @return int[][] the 2D Map Space.
 	 */
-	public static int[][] generate_map_space() {
+	public static int[][] generate_map_space(String filename) {
 		try{
-            FileReader file_reader = new FileReader("/Users/hiramrios/Desktop/cs165a-projectwork/test_case_files/test_case_10_10.txt");
+            FileReader file_reader = new FileReader(filename);
             BufferedReader buffered_reader = new BufferedReader(file_reader);
             String current_line;
             
@@ -389,7 +389,7 @@ public class Assignment2 {
 
 	/** MAIN RUNNER */
 	public static void main(String[] args) {
-		int[][] map_space = generate_map_space();
+		int[][] map_space = generate_map_space((args[0]));
 		search_algorithms(map_space);
 		confirm_program_termination();
 	}
