@@ -12,7 +12,7 @@
 import java.io.*;          //For fileReader() & bufferedReader()
 import java.util.*;        //For scanner when TA executes .jar file
 
-public class Assignment2 {
+public class AITreeSearches {
 	
 	public static final long startTime = 0;
 	public static int children_expanded = 0;        //Counter for the number of expanded successor nodes
@@ -329,20 +329,6 @@ public class Assignment2 {
 	public static int manhattan_distance(int x, int y, Node goal_node) {
 		return(Math.abs(goal_node.x - x) + Math.abs(goal_node.y - y));
 	}
-
-//	/**
-//	 * DISPLAY PATH
-//	 * @param node the current node being traversed
-//	 * @param path_cost the cost of the path thus far
-//	 * This method prints the path & cost from the goal node to the start node
-//	 */
-//	public static void display_path_information(Node current_node, int path_cost) {
-//		while(current_node != null) {
-//			System.out.print("(" +(current_node.x+1)+ "," +(current_node.y+1)+ ")\n" +
-//					"Cost of path: " +path_cost+ ")\n");
-//			current_node = current_node.prev;
-//		}
-//	}
 	
 	/**	Comparator For A* Search Priority Queue	 */
 	public static Comparator<Node> queue_comparator = new Comparator<Node>() {
