@@ -17,52 +17,48 @@ public class Assignment2 {
 	 * @return int[][] the 2D Map Space.
 	 */
 	public static int[][] generate_map_space() {
-		try {
-			//TODO: COMPLETE DIRECTORY TO FILE
-			String current_line, file_name = ("/Users/hiramrios/Desktop/cs165a-projectwork/test_case_files/test_case_20_20.txt");
-			FileReader file_reader = new FileReader(file_name);
-			BufferedReader buffered_reader = new BufferedReader(file_reader);
+		try{//reads the file
+            FileReader fr = new FileReader("/Users/hiramrios/Desktop/cs165a-projectwork/test_case_files/test_case_10_10.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String currentLine;
 
-			//Create the 2-D Map Space
-			current_line = buffered_reader.readLine();
-			String[] string_split = current_line.split(" ");
-			int[][] map_space = new int[Integer.parseInt(string_split[0])][Integer.parseInt(string_split[1])];
+            currentLine = br.readLine();//gets the size of the map and creates the matrix for it
+            String[] split = currentLine.split(" ");
+			int[][] map = new int[Integer.parseInt(split[0])][Integer.parseInt(split[1])];
+            
+			currentLine = br.readLine();//gets the starting possition
+			split = currentLine.split(" ");
+            start = new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
+            
+			currentLine = br.readLine();//gets the goal possition
+			split = currentLine.split(" ");
+            goal = new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
+            
+			int count = 0;//for the row of the matrix
+			
+			System.out.println("Size: " + map.length + " " + map[0].length);//returns the information given to the user
+			System.out.println("Start: " + start[0] + " " + start[1]);
+			System.out.println("Goal: " + goal[0] + " " + goal[1]);
+			
+            while((currentLine = br.readLine()) != null){//populates the matrix
+                split = currentLine.split(" ");
+                for(int i = 0; i < split.length; i++) {
+                    map[count][i] = Integer.parseInt(split[i]);
+                }
+                count++;
+            }
 
-			//Retrieve Starting Position
-			current_line = buffered_reader.readLine();
-			string_split = current_line.split(" ");
-			start = new int[]{Integer.parseInt(string_split[0]), Integer.parseInt(string_split[1])};
+            return map;
 
-			//Retrieve Goal Position
-			current_line = buffered_reader.readLine();
-			string_split = current_line.split(" ");
-			goal = new int[]{Integer.parseInt(string_split[0]), Integer.parseInt(string_split[1])};
-			int row = 0;
 
-			//Populate 2-D Map Space with position info
-			while((current_line = buffered_reader.readLine()) != null) {
-				string_split = current_line.split(" ");
-				for(int column = 0; column < string_split.length; column++) {
-					map_space[row][column] = Integer.parseInt(string_split[column]);
-				}
-			}
+        }catch (IOException e){//could not read the time
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
 
-			//Print the 2-D Map Space
-			for(int i=0; i<map_space.length; i++) {
-				for(int j=0; j<map_space[i].length; j++) {
-					System.out.println(map_space[i][j]+" ");
-				}
-			}
-			buffered_reader.close();
-			return map_space;
-		}
-		catch(IOException e) {
-			System.out.println(e.getMessage());
-			System.exit(0);
-		}
-		return null;
-	}
+        return null;
 
+    }	
 	public static void print_search_Results(boolean times_up, long start_timer) {//prints results of search
 		if(!(times_up)) {
 			System.out.println("\tNumber of Nodes Expanded\t\t" + children_expanded);
@@ -164,8 +160,8 @@ public class Assignment2 {
 		Node goal_node = new Node(goal[0]-1, goal[1]-1);
 		//Generate Starting Node
 		Node start_node = new Node(start[0]-1, start[1]-1,
-				manhattan_distance(start[0]-1, start[1]-1, goal_node), 
-				map_space[start[0]-1][start[1]-1], null);
+		manhattan_distance(start[0]-1, start[1]-1, goal_node), 
+		map_space[start[0]-1][start[1]-1], null);
 		boolean[][] nodes_visited = new boolean[map_space.length][map_space[0].length];
 		int total = 0, limit = 0, infitite_count = 1;      // might have to set to Integer.MAX_VALUE()
 		//REMEMBER TO USE STACK AS A FRINGE (FILO)
@@ -220,8 +216,8 @@ public class Assignment2 {
 					memory_nodes = the_fringe.size();
 			}
 			total++;
-			//infitite_count++;
-			limit++;
+			infitite_count++;
+			
 		}	
 		System.out.println("\nITERATIVE DEEPENING DFS--");
 		print_search_Results(times_up, begin_timer);//prints results
