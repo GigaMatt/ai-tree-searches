@@ -1,3 +1,20 @@
-/Assignment2.class
-/Node.class
-/Assignment2$1.class
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+.factorypath
+log/
+target/
+
+# VS Code
+.vscode/
